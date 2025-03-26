@@ -8,3 +8,7 @@ loader = PyPDFDirectoryLoader(
 )
 
 documents = loader.load()
+
+# Split the text into characters
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+splitted_chunks = splitter.split_documents(documents)
