@@ -2,6 +2,7 @@ from langchain_huggingface import HuggingFaceEmbeddings, HuggingFaceEndpoint
 from langchain.prompts import PromptTemplate
 from langchain_community.vectorstores import FAISS
 from dotenv import load_dotenv
+from langchain.chains import RetrievalQA
 import os
 
 # Load environment variables from .env file
@@ -17,9 +18,9 @@ llm = HuggingFaceEndpoint(
 
 # Setup the Prompt
 custom_prompt_template = """
-Use the pieces of information provided in the context to answer user's question.
-If you dont know the answer, just say that you dont know, dont try to make up an answer. 
-Dont provide anything out of the given context
+Use the pieces of information provided in the context to answer the user's question.
+If the question is not related to the context, respond with "The question is not related to the provided context." 
+Do not attempt to make up an answer or provide unrelated information.
 
 Context: {context}
 Question: {question}
@@ -38,4 +39,13 @@ embedding_model = HuggingFaceEmbeddings(
 )
 db = FAISS.load_local(
     DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True
+)
+
+# Create the RetrievalQA chain
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    chain_type="stuff",
+    retriever=db.as_retriever(search_kwargs={"k": 3}),
+    return_source_documents=True,
+    chain_type_kwargs={"prompt": prompt},
 )
