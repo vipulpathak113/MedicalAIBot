@@ -1,25 +1,134 @@
 # MedicalAIBot
 
-This is a bot designed to answer any medical query. Below is a step-by-step explanation of the process implemented in the `memory_llm.py` file:
+This is a bot designed to answer any medical query by processing and querying medical documents efficiently.
 
-## Steps Implemented in `memory_llm.py`
+## Table of Contents
+1. [Overview](#overview)
+2. [Features](#features)
+3. [How It Works](#how-it-works)
+   - [Steps in `memory_llm.py`](#steps-in-memory_llm.py)
+   - [Steps in `llm_connect_memory.py`](#steps-in-llm_connect_memory.py)
+4. [Usage](#usage)
+5. [Example Queries](#example-queries)
+6. [Contributing](#contributing)
+
+---
+
+## Overview
+
+MedicalAIBot leverages advanced AI techniques to process medical documents and provide accurate, contextually relevant answers to user queries. It uses **FAISS** for similarity search and **Hugging Face models** for embeddings and language generation.
+
+---
+
+## Features
+
+- Load and process medical documents in bulk.
+- Perform semantic similarity searches using FAISS.
+- Generate accurate responses using a pre-trained language model.
+- Customizable prompt templates for tailored responses.
+
+---
+
+## How It Works
+
+### Steps in `memory_llm.py`
 
 1. **Load PDF Documents**:
-   - The script uses the `PyPDFDirectoryLoader` to load all PDF files from the `data/` directory. It recursively searches for PDF files while ignoring hidden files.
-   - This ensures that all relevant documents are loaded into the system for further processing.
+   - Uses `PyPDFDirectoryLoader` to load all PDF files from the `data/` directory.
+   - Recursively searches for PDF files while ignoring hidden files.
 
 2. **Split Text into Chunks**:
-   - The `RecursiveCharacterTextSplitter` is used to split the text from the loaded documents into smaller chunks.
-   - Each chunk is limited to 500 characters, with a 50-character overlap between consecutive chunks. This overlap helps preserve context between chunks.
+   - Splits text into 500-character chunks with a 50-character overlap using `RecursiveCharacterTextSplitter`.
 
 3. **Generate Vector Embeddings**:
-   - The `HuggingFaceEmbeddings` model (`sentence-transformers/all-MiniLM-L6-v2`) is used to convert the text chunks into vector embeddings.
-   - These embeddings represent the semantic meaning of the text and are essential for efficient querying and similarity searches.
+   - Converts text chunks into vector embeddings using `sentence-transformers/all-MiniLM-L6-v2`.
 
 4. **Store Embeddings in FAISS**:
-   - The vector embeddings are stored in a FAISS (Facebook AI Similarity Search) index, which is a high-performance library for similarity search.
-   - The FAISS index is saved locally at the path `vectorstore/db_faiss` for later use.
+   - Saves embeddings in a FAISS index at `vectorstore/db_faiss`.
 
-This pipeline ensures that the bot can efficiently process and query medical documents to provide accurate answers to user queries.
+### Steps in `llm_connect_memory.py`
+
+1. **Load the FAISS Database**:
+   - Loads the FAISS index using `FAISS.load_local`.
+
+2. **Setup the LLM**:
+   - Connects to the Hugging Face model `mistralai/Mistral-7B-Instruct-v0.3` with a temperature of 0.5.
+
+3. **Define the Prompt Template**:
+   - Guides the LLM to answer questions based on the retrieved context.
+
+4. **Query Embedding and Similarity Search**:
+   - Converts queries into embeddings and retrieves the top 3 relevant document chunks.
+
+5. **LLM Tokenization and Response Generation**:
+   - Generates responses based on the context and user query.
+
+---
+
+## Usage
+
+### Prerequisites
+
+- Python 3.8+
+- Install dependencies:
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+### Running the Pipeline
+
+1. **Generate FAISS Index**:
+   ```bash
+   python memory_llm.py
+   ```
+
+2. **Query the Bot**:
+   ```bash
+   python llm_connect_memory.py
+   ```
+
+---
+
+## Example Queries
+
+Here’s how you can interact with the bot:
+
+**User Query**:
+> What are the symptoms of diabetes?
+
+**Bot Response**:
+> Based on the documents, the symptoms of diabetes include increased thirst, frequent urination, extreme hunger, and unexplained weight loss.
+
+---
+
+## Visual Workflow
+
+Below is a simplified flowchart of the pipeline:
+
+```plaintext
+Load PDFs --> Split Text --> Generate Embeddings --> Store in FAISS
+       |                                                        |
+       v                                                        v
+Retrieve Context <-- Query Embedding <-- User Query <-- Generate Response
+```
+
+---
+
+## Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch:
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Commit your changes and push:
+   ```bash
+   git push origin feature-name
+   ```
+4. Submit a pull request.
+
+---
 
 
