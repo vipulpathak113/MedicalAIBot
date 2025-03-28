@@ -37,9 +37,21 @@ DB_FAISS_PATH = "vectorstore/db_faiss"
 embedding_model = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
-db = FAISS.load_local(
-    DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True
-)
+
+try:
+    # Debugging: Log before loading FAISS
+    print(f"Loading FAISS index from: {DB_FAISS_PATH}")
+    
+    db = FAISS.load_local(
+        DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True
+    )
+    
+    # Debugging: Log after successful load
+    print("FAISS index loaded successfully.")
+except Exception as e:
+    # Debugging: Log any errors during loading
+    print(f"Error loading FAISS index: {e}")
+    raise e
 
 # Create the RetrievalQA chain
 qa_chain = RetrievalQA.from_chain_type(
@@ -49,4 +61,15 @@ qa_chain = RetrievalQA.from_chain_type(
     return_source_documents=False,  # Ensure only the result is returned
     chain_type_kwargs={"prompt": prompt},
 )
+
+# Debugging: Add a test query to verify the chain works
+if __name__ == "__main__":
+    test_query = "What is the purpose of this chatbot?"
+    try:
+        test_output = qa_chain.invoke({"query": test_query})  # Use invoke to match app.py
+        print("Test Output:", test_output)
+        if not test_output or "result" not in test_output:
+            print("Error: QA Chain did not return a valid result.")
+    except Exception as e:
+        print(f"Error during test query: {e}")
 

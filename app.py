@@ -86,9 +86,22 @@ def reset_chat():
 def handle_user_input(user_message):
     """Process user input and generate response"""
     try:
+        # Debugging: Log the user message
+        print(f"User Message: {user_message}")
+        
+        # Invoke the QA chain
         output = qa_chain.invoke({"query": user_message})
+        
+        # Debugging: Log the QA chain output
+        print(f"QA Chain Output: {output}")
+        
+        # Extract and return the result
         return output.get("result", "Sorry, I couldn't generate a response.")
     except Exception as e:
+        # Log the exception
+        print(f"Error during QA chain invocation: {e}")
+        
+        # Display error in the UI
         st.error(f"An error occurred: {e}")
         return None
 
@@ -96,6 +109,10 @@ def handle_input():
     """Handle input submission"""
     if st.session_state[st.session_state.input_key]:
         user_message = st.session_state[st.session_state.input_key]
+        
+        # Debugging: Log the input key and message
+        print(f"Input Key: {st.session_state.input_key}, User Message: {user_message}")
+        
         st.session_state.chat_history.add_message("user", user_message)
         
         with st.session_state.spinner_placeholder:
@@ -103,6 +120,8 @@ def handle_input():
                 response = handle_user_input(user_message)
                 if response:
                     st.session_state.chat_history.add_message("bot", response)
+                else:
+                    st.error("No response generated. Please try again.")
         clear_input()
 
 def render_ui():
