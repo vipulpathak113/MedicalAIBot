@@ -1,6 +1,6 @@
 # MedicalAIBot
 
-This is a bot designed to answer any medical query by processing and querying medical documents efficiently.
+This is a bot designed to answer any medical query by processing and querying medical documents efficiently. Additionally, it includes a **Streamlit-based chatbot UI** for interactive communication.
 
 ## Table of Contents
 1. [Overview](#overview)
@@ -8,15 +8,16 @@ This is a bot designed to answer any medical query by processing and querying me
 3. [How It Works](#how-it-works)
    - [Steps in `memory_llm.py`](#steps-in-memory_llm.py)
    - [Steps in `llm_connect_memory.py`](#steps-in-llm_connect_memory.py)
-4. [Usage](#usage)
-5. [Example Queries](#example-queries)
-6. [Contributing](#contributing)
+4. [Streamlit Chatbot](#streamlit-chatbot)
+5. [Usage](#usage)
+6. [Example Queries](#example-queries)
+7. [Contributing](#contributing)
 
 ---
 
 ## Overview
 
-MedicalAIBot leverages advanced AI techniques to process medical documents and provide accurate, contextually relevant answers to user queries. It uses **FAISS** for similarity search and **Hugging Face models** for embeddings and language generation.
+MedicalAIBot leverages advanced AI techniques to process medical documents and provide accurate, contextually relevant answers to user queries. It uses **FAISS** for similarity search and **Hugging Face models** for embeddings and language generation. The **Streamlit chatbot UI** provides an interactive interface for users to communicate with the bot.
 
 ---
 
@@ -25,7 +26,7 @@ MedicalAIBot leverages advanced AI techniques to process medical documents and p
 - Load and process medical documents in bulk.
 - Perform semantic similarity searches using FAISS.
 - Generate accurate responses using a pre-trained language model.
-- Customizable prompt templates for tailored responses.
+- Interactive chatbot UI with chat history and reset functionality.
 
 ---
 
@@ -65,6 +66,36 @@ MedicalAIBot leverages advanced AI techniques to process medical documents and p
 
 ---
 
+## Streamlit Chatbot
+
+The Streamlit chatbot provides an interactive interface for users to communicate with the bot. It includes the following features:
+
+- **User-Friendly UI**: User messages appear on the left, and bot responses appear on the right.
+- **Chat History**: Displays the full history of the conversation.
+- **Reset Button**: Allows users to reset the chat history.
+- **Customizable Logic**: Easily extendable to include additional chatbot functionalities.
+
+### Running the Chatbot
+
+1. Navigate to the `streamlit_chatbot` directory:
+   ```bash
+   cd streamlit_chatbot
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the Streamlit app:
+   ```bash
+   streamlit run app.py
+   ```
+
+4. Open the provided URL in your browser to interact with the chatbot.
+
+---
+
 ## Usage
 
 ### Prerequisites
@@ -86,6 +117,9 @@ MedicalAIBot leverages advanced AI techniques to process medical documents and p
    ```bash
    python llm_connect_memory.py
    ```
+
+3. **Run the Chatbot**:
+   Follow the steps in the [Streamlit Chatbot](#streamlit-chatbot) section.
 
 ---
 
