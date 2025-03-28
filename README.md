@@ -77,22 +77,17 @@ The Streamlit chatbot provides an interactive interface for users to communicate
 
 ### Running the Chatbot
 
-1. Navigate to the `streamlit_chatbot` directory:
-   ```bash
-   cd streamlit_chatbot
-   ```
-
-2. Install dependencies:
+1. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Run the Streamlit app:
+2. Run the Streamlit app:
    ```bash
    streamlit run app.py
    ```
 
-4. Open the provided URL in your browser to interact with the chatbot.
+3. Open the provided URL in your browser to interact with the chatbot.
 
 ---
 
