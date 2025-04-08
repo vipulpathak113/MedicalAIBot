@@ -116,7 +116,7 @@ The Streamlit chatbot provides an interactive interface for users to communicate
 3. **Run the Chatbot**:
    Follow the steps in the [Streamlit Chatbot](#streamlit-chatbot) section.
 
---
+---
 
 ## Example Queries
 
