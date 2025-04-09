@@ -48,10 +48,10 @@ try:
     
     # Debugging: Log after successful load
     print("FAISS index loaded successfully.")
-except Exception as e:
+except Exception as error:
     # Debugging: Log any errors during loading
-    print(f"Error loading FAISS index: {e}")
-    raise e
+    print(f"Error loading FAISS index: {error}")
+    raise error
 
 # Create the RetrievalQA chain
 qa_chain = RetrievalQA.from_chain_type(
