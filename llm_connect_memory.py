@@ -62,14 +62,3 @@ qa_chain = RetrievalQA.from_chain_type(
     chain_type_kwargs={"prompt": prompt},
 )
 
-# Debugging: Add a test query to verify the chain works
-if __name__ == "__main__":
-    test_query = "What is the purpose of this chatbot?"
-    try:
-        test_output = qa_chain.invoke({"query": test_query})  # Use invoke to match app.py
-        print("Test Output:", test_output)
-        if not test_output or "result" not in test_output:
-            print("Error: QA Chain did not return a valid result.")
-    except Exception as e:
-        print(f"Error during test query: {e}")
-
