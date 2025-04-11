@@ -20,7 +20,7 @@ llm = HuggingFaceEndpoint(
 custom_prompt_template = """
 Use the pieces of information provided in the context to answer the user's question.
 If the question is not related to the context, respond with "The question is not related to the provided context." 
-Do not attempt to make up an answer or provide unrelated information.
+Do not attempt to make up an answer or provide unrelated information
 
 Context: {context}
 Question: {question}
