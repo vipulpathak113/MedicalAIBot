@@ -13,7 +13,7 @@ hf_token = os.getenv("HF_TOKEN")
 llm = HuggingFaceEndpoint(
     huggingfacehub_api_token=hf_token,
     repo_id="mistralai/Mistral-7B-Instruct-v0.3",
-    temperature=0.5,
+    temperature=0.4,
 )
 
 # Setup the Prompt
