@@ -16,9 +16,11 @@ splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 splitted_chunks = splitter.split_documents(documents)
 
 # Create Vector Embeddings
-embeddings_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+embeddings_model = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 # Store embeddings in FAISS
-DB_FAISS_PATH="vectorstore/db_faiss"
-db=FAISS.from_documents(splitted_chunks, embeddings_model)
+DB_FAISS_PATH = "vectorstore/db_faiss"
+db = FAISS.from_documents(splitted_chunks, embeddings_model)
 db.save_local(DB_FAISS_PATH)

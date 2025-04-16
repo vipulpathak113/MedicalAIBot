@@ -41,11 +41,11 @@ embedding_model = HuggingFaceEmbeddings(
 try:
     # Debugging: Log before loading FAISS
     print(f"Loading FAISS index from: {DB_FAISS_PATH}")
-    
+
     db = FAISS.load_local(
         DB_FAISS_PATH, embedding_model, allow_dangerous_deserialization=True
     )
-    
+
     # Debugging: Log after successful load
     print("FAISS index loaded successfully.")
 except Exception as error:
@@ -61,4 +61,3 @@ qa_chain = RetrievalQA.from_chain_type(
     return_source_documents=False,  # Ensure only the result is returned
     chain_type_kwargs={"prompt": prompt},
 )
-

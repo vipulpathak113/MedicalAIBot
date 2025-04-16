@@ -1,6 +1,7 @@
 import streamlit as st
 from langchain.memory import ConversationBufferWindowMemory  # Add this import
 from langchain.schema import HumanMessage, AIMessage
+
 # from components.chat_ui import render_chat_ui
 from llm_connect_memory import qa_chain
 
@@ -86,6 +87,7 @@ AUTO_FOCUS_JS = """
     </script>
 """
 
+
 def init_session_state():
     """Initialize all session state variables"""
     if "messages" not in st.session_state:
@@ -96,57 +98,62 @@ def init_session_state():
         st.session_state.spinner_placeholder = st.empty()
     if "memory" not in st.session_state:
         st.session_state.memory = ConversationBufferWindowMemory(
-            k=10,
-            return_messages=True,
-            memory_key="chat_history"
+            k=10, return_messages=True, memory_key="chat_history"
         )
+
 
 def clear_input():
     """Toggle input key to clear input field"""
-    st.session_state.input_key = "user_input_2" if st.session_state.input_key == "user_input_1" else "user_input_1"
+    st.session_state.input_key = (
+        "user_input_2"
+        if st.session_state.input_key == "user_input_1"
+        else "user_input_1"
+    )
+
 
 def reset_chat():
     """Reset chat history and input"""
     # Clear session state
     for key in list(st.session_state.keys()):
         del st.session_state[key]
-    
+
     # Reinitialize session state
     init_session_state()
-    
+
     # Clear input
     clear_input()
+
 
 def handle_user_input(user_message: str) -> str:
     """Process user input and generate response"""
     try:
         # Add user message to memory
         st.session_state.messages.append(HumanMessage(content=user_message))
-        
+
         # Get response from QA chain
         output = qa_chain.invoke({"query": user_message})
         response = output.get("result", "Sorry, I couldn't generate a response.")
-        
+
         # Add AI response to memory
         st.session_state.messages.append(AIMessage(content=response))
-        
+
         # Save to conversational memory
         st.session_state.memory.save_context(
-            {"input": user_message},
-            {"output": response}
+            {"input": user_message}, {"output": response}
         )
-        
+
         return response
     except Exception as e:
         print(f"Error during QA chain invocation: {e}")
         st.error(f"An error occurred: {e}")
         return None
 
+
 def handle_input():
     """Handle input submission"""
     if st.session_state[st.session_state.input_key]:
         user_message = st.session_state[st.session_state.input_key]
-        
+
         with st.session_state.spinner_placeholder:
             with st.spinner("Generating response..."):
                 response = handle_user_input(user_message)
@@ -154,15 +161,20 @@ def handle_input():
                     st.error("No response generated. Please try again.")
         clear_input()
 
+
 def render_chat_ui():
     """Render the chat interface"""
-    st.markdown("""
+    st.markdown(
+        """
         <div style='display: flex; flex-direction: column; gap: 1.5rem;'>
-    """, unsafe_allow_html=True)
-    
+    """,
+        unsafe_allow_html=True,
+    )
+
     for msg in st.session_state.messages:
         if isinstance(msg, HumanMessage):
-            st.markdown("""
+            st.markdown(
+                """
                 <div style='display: flex; justify-content: flex-start; margin: 0.5rem 0;'>
                     <div style='
                         background-color: #e6f7ff;
@@ -176,9 +188,14 @@ def render_chat_ui():
                     '>
                         <strong>You:</strong> {}</div>
                 </div>
-            """.format(msg.content), unsafe_allow_html=True)
+            """.format(
+                    msg.content
+                ),
+                unsafe_allow_html=True,
+            )
         elif isinstance(msg, AIMessage):
-            st.markdown("""
+            st.markdown(
+                """
                 <div style='display: flex; justify-content: flex-end; margin: 0.5rem 0;'>
                     <div style='
                         background-color: #d9f7be;
@@ -192,57 +209,66 @@ def render_chat_ui():
                     '>
                         <strong>MediBot:</strong> {}</div>
                 </div>
-            """.format(msg.content), unsafe_allow_html=True)
-    
+            """.format(
+                    msg.content
+                ),
+                unsafe_allow_html=True,
+            )
+
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 def render_ui():
     """Render all UI components"""
     # Add CSS
     st.markdown(CSS, unsafe_allow_html=True)
-    
+
     # Add header
     st.markdown(HEADER, unsafe_allow_html=True)
-    
+
     # Render chat history
     render_chat_ui()
-    
+
     # Create container for input and reset button
     input_container = st.container()
     with input_container:
         # Create two columns for input and reset button
         input_col, reset_col = st.columns([8, 1])
-        
+
         # Add input field
         with input_col:
             st.text_input(
-                "Type your message:", 
+                "Type your message:",
                 key=st.session_state.input_key,
-                on_change=handle_input
+                on_change=handle_input,
             )
-        
+
         # Add reset button
         with reset_col:
-            if st.button("🔄", 
-                         key="reset_chat_btn", 
-                         help="Reset Chat",
-                         use_container_width=False,  # Add this parameter
-                         type="secondary"):          # Add this parameter
+            if st.button(
+                "🔄",
+                key="reset_chat_btn",
+                help="Reset Chat",
+                use_container_width=False,  # Add this parameter
+                type="secondary",
+            ):  # Add this parameter
                 for key in list(st.session_state.keys()):
                     del st.session_state[key]
                 st.rerun()
-    
+
     # Add spinner placeholder
     with st.container():
         st.session_state.spinner_placeholder = st.empty()
-    
+
     # Add auto-focus JavaScript
     st.components.v1.html(AUTO_FOCUS_JS, height=0)
+
 
 def main():
     """Main application entry point"""
     init_session_state()
     render_ui()
+
 
 if __name__ == "__main__":
     main()
