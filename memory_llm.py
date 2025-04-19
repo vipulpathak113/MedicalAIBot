@@ -6,7 +6,7 @@ from langchain_community.vectorstores import FAISS
 # Load all PDF files in the data directory
 loader = PyPDFDirectoryLoader(
     path="data/",
-    glob="**/[!.]*.pdf",
+    glob="**/[!.]*.pdf"
 )
 
 documents = loader.load()
